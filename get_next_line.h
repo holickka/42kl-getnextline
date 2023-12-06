@@ -1,10 +1,16 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+# include <unistd.h>
 # include <stdio.h>
-char *get_next_line(int fd);
+# include <stdlib.h>
+# include <fcntl.h>
 
-# define UINT_MAX 4294967295
+char	*get_next_line(int fd);
+void	*ft_calloc(size_t count, size_t n);
+
+# endif
+
+#ifndef BUFFER_SIZE
 # define BUFFER_SIZE 42
-
 # endif
