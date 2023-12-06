@@ -1,11 +1,6 @@
 #include "get_next_line.h"
 #define UINT_MAX 4294967295
 
-void	ft_putchar_fd(char c, int fd)
-{
-	write(fd, &c, 1);
-}
-
 void	*ft_calloc(size_t count, size_t n)
 {
 	size_t			i;
