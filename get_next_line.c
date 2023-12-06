@@ -1,48 +1,31 @@
 #include "get_next_line.h"
 
-static int	ft_isnewline(char *buffer)
-{
-	int	i;
-
-	i = 0;
-	while (buffer[i])
-	{
-		if(buffer[i] == '\n')
-			return (i + 1);
-		i++;
-	}
-	return (i);
-}
-
 char	*get_next_line(int fd)
 {
 	static char	*buffer;
 	char		*dest;
 	int			bytesread;
-	int			a;
 
-	a = 0;
-	/* create buffer to store data frm read */
-	if (!buffer && fd != -1)
+	if (BUFFER_SIZE <= 0 || fd < 0)
+		return (NULL);
+	dest = NULL;
+	bytesread = 1;
+	while (bytesread > 0)
 	{
-		buffer = (char *)ft_calloc(BUFFER_SIZE, sizeof(char));
+		/* create buffer to store data frm read */
 		if (!buffer)
-			return (NULL);
-		bytesread = read(fd, buffer, BUFFER_SIZE);
-		if (bytesread == -1)
-			return (NULL);
+		{
+			buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+			bytesread = read(fd, buffer, BUFFER_SIZE);
+		}
+		while (*buffer && *buffer != '\n')
+			dest = ft_charjoin(dest, *buffer++);
+		if (*buffer == '\n')
+			return (ft_charjoin(dest, *buffer++));
+		if (!*buffer)
+			buffer = NULL;
 	}
-	if (!*buffer || fd == -1)
-		return (NULL);
-	/* calloc to store string til nl */
-	dest = (char *)ft_calloc((ft_isnewline(buffer) + 1), sizeof(char));
-	if (!dest)
-		return (NULL);
-	while (*buffer && *buffer != '\n')
-		dest[a++] = *buffer++;
-	if (*buffer == '\n')
-		dest[a++] = *buffer++;
-	return (dest);
+	return(dest);
 }
 /*
 #include <stdio.h>
@@ -87,7 +70,6 @@ int	main()
 | notes |
 | main task |
 to read text file pointed by file descriptor,
-one line at a time
 malloc and returns the line that's read
 returned line should include \n
 if nothing to read or error, return NULL
@@ -95,6 +77,7 @@ if nothing to read or error, return NULL
 | about read() |
 read() returns num of bytes read
 on error read() return -1
+when nothing to read, read() returns 0
 
 read() stores data read in 'buffer',
 BUFFER_SIZE defines how many bytes to read
