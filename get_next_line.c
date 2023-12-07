@@ -6,7 +6,7 @@ char	*get_next_line(int fd)
 	char		*dest;
 	int			bytesread;
 
-	if (BUFFER_SIZE <= 0 || fd < 0)
+	if (BUFFER_SIZE <= 0 || fd < 0 )
 		return (NULL);
 	dest = NULL;
 	bytesread = 1;
@@ -21,10 +21,14 @@ char	*get_next_line(int fd)
 		while (*buffer && *buffer != '\n')
 			dest = ft_charjoin(dest, *buffer++);
 		if (*buffer == '\n')
-			return (ft_charjoin(dest, *buffer++));
+		{
+			dest = ft_charjoin(dest, *buffer++);
+			break ;
+		}
 		if (!*buffer)
 			buffer = NULL;
 	}
+	free(dest);
 	return(dest);
 }
 /*
