@@ -1,11 +1,11 @@
 #include "get_next_line.h"
 
-void	ft_del(void	*mylist)
+static void	ft_del(void	*mylist)
 {
     free(mylist);
 }
 
-char	*ft_chrdup(char c)
+static char	*ft_chrdup(char c)
 {
     char    *dest;
     int     i;
@@ -21,7 +21,7 @@ char	*ft_chrdup(char c)
     return (dest);
 }
 
-char	*ft_combinestring(t_list *lst)
+static char	*ft_combinestring(t_list *lst)
 {
     t_list  *temp;
     char    *tab;
@@ -40,37 +40,33 @@ char	*ft_combinestring(t_list *lst)
     return(oritab);
 }
 
-void	createbuffer(char **buffer, char **oribuffer, int fd, int *bytesread)
-{
-    *buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-    *bytesread = read(fd, *buffer, BUFFER_SIZE);
-    *oribuffer = *buffer;
-}
-
-void	destroybuffer(char **buffer, char **oribuffer)
-{
-    free(*oribuffer);
-    *buffer = NULL;
-}
-
-int	scanbuffer(char **buffer, t_list **tab, char **leftover)
+static int	scanbuffer(char *buffer, t_list **tab, char **leftover)
 {
     int i;
 
     i = 0;
-    while (*buffer[i] && *buffer[i] != '\n')
-        ft_lstadd_back(tab, ft_lstnew(ft_chrdup(*buffer[i++])));
-    if (*buffer[i] == '\n')
+    while (buffer[i] && buffer[i] != '\n')
+        ft_lstadd_back(tab, ft_lstnew(ft_chrdup(buffer[i++])));
+    if (buffer[i] == '\n')
     {
-        ft_lstadd_back(tab, ft_lstnew(ft_chrdup(*buffer[i++])));
-        if (*buffer[i])
+        ft_lstadd_back(tab, ft_lstnew(ft_chrdup(buffer[i++])));
+        if (buffer[i])
         {
-            leftover = ft_calloc(ft_strlen(&buffer[i]) + 1, sizeof(char));
-            ft_memcpy(leftover, &buffer[i], ft_strlen(&buffer[i]));
+            *leftover = ft_calloc(ft_strlen(&buffer[i]) + 1, sizeof(char));
+            ft_memcpy(*leftover, &buffer[i], ft_strlen(&buffer[i]));
         }
         return (0);
     }
+    if (!buffer[i])
+        ft_bzero(buffer, BUFFER_SIZE + 1);
     return (1);
+}
+
+static void	loadleftover(char *buffer, char **leftover)
+{
+    ft_memcpy(buffer, *leftover, ft_strlen(*leftover));
+    free(*leftover);
+    *leftover = NULL;
 }
 
 char	*get_next_line(int fd)
@@ -84,17 +80,15 @@ char	*get_next_line(int fd)
     if (fd < 0 || BUFFER_SIZE <= 0)
         return (NULL);
     ft_bzero(buffer, BUFFER_SIZE + 1);
-    while (leftover)
+    if (leftover)
+        loadleftover(buffer, &leftover);
+    if (!leftover && scanbuffer(buffer, &tab, &leftover))
     {
-        ft_memcpy(buffer, leftover, ft_strlen(leftover));
-        free(leftover);
-        if (!scanbuffer(&buffer, &tab, &leftover))
-            break ;
-    }
-    while (read(fd, buffer, BUFFER_SIZE) > 0 && !leftover)
-    {
-        if (!scanbuffer(&buffer, &tab, &leftover))
-            break ;
+        while (read(fd, buffer, BUFFER_SIZE) > 0)
+        {
+            if (!scanbuffer(buffer, &tab, &leftover))
+                break ;
+        }
     }
     result = ft_combinestring(tab);
     ft_lstclear(&tab, &ft_del);
