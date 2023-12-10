@@ -40,28 +40,29 @@ char	*ft_combinestring(t_list *lst)
     return(oritab);
 }
 
-void	createbuffer(static char **buffer, int fd)
+void	createbuffer(char **buffer, char **oribuffer, int fd, int *bytesread)
 {
-    buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-    bytesread = read(fd, buffer, BUFFER_SIZE);
-    oribuffer = buffer;
+    *buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+    *bytesread = read(fd, *buffer, BUFFER_SIZE);
+    *oribuffer = *buffer;
 }
 
-void	destroybuffer(static char *buffer, static char *oribuffer)
+void	destroybuffer(char **buffer, char **oribuffer)
 {
-    free(oribuffer);
-    buffer = NULL;
+    free(*oribuffer);
+    *buffer = NULL;
 }
 
-void	scanbuffer(static char *buffer)
+int	scanbuffer(char **buffer, t_list **tab)
 {
-    while (*buffer && *buffer != '\n')
-        ft_lstadd_back(&temp, ft_lstnew(ft_chrdup(*buffer++)));
-    if (*buffer == '\n')
+    while (**buffer && **buffer != '\n')
+        ft_lstadd_back(tab, ft_lstnew(ft_chrdup(*(*buffer)++)));
+    if (**buffer == '\n')
     {
-        ft_lstadd_back(&temp, ft_lstnew(ft_chrdup(*buffer++)));
-        break ;
+        ft_lstadd_back(tab, ft_lstnew(ft_chrdup(*(*buffer)++)));
+        return (0);
     }
+    return (1);
 }
 
 char	*get_next_line(int fd)
@@ -69,26 +70,23 @@ char	*get_next_line(int fd)
     static char *buffer;
     static char *oribuffer;
     char        *result;
-    t_list      *temp;
+    t_list      *tab;
     int         bytesread;
 
     bytesread = 1;
-    temp = NULL;
+    tab = NULL;
+    if (fd < 0 || BUFFER_SIZE <= 0)
+        return (NULL);
     while (bytesread > 0)
     {
         if (!buffer)
-            createbuffer(&buffer, fd);
-        while (*buffer && *buffer != '\n')
-            ft_lstadd_back(&temp, ft_lstnew(ft_chrdup(*buffer++)));
-        if (*buffer == '\n')
-        {
-            ft_lstadd_back(&temp, ft_lstnew(ft_chrdup(*buffer++)));
+            createbuffer(&buffer, &oribuffer, fd, &bytesread);
+        if (!scanbuffer(&buffer, &tab))
             break ;
-        }
         if (!(*buffer))
             destroybuffer(&buffer, &oribuffer);
     }
-    result = ft_combinestring(temp);
-    ft_lstclear(&temp, &ft_del);
+    result = ft_combinestring(tab);
+    ft_lstclear(&tab, &ft_del);
     return (result);
 }
