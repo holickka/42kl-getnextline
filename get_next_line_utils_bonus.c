@@ -1,4 +1,16 @@
-#include "get_next_line.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hsim <hsim@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/11 19:52:56 by hsim              #+#    #+#             */
+/*   Updated: 2023/12/11 20:06:28 by hsim             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "get_next_line_bonus.h"
 #define UINT_MAX 4294967295
 
 void	ft_lstadd_back(t_list **lst, t_list *new)
@@ -33,50 +45,19 @@ t_list	*ft_lstnew(void *content)
 	return (NULL);
 }
 
-int	ft_lstsize(t_list *lst)
-{
-	int	i;
-
-	i = 0;
-	while (lst)
-	{
-		i++;
-		lst = lst->next;
-	}
-	return (i);
-}
-
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+void	ft_lstclear(t_list **lst)
 {
 	t_list	*temp;
 
-	if (!lst || !del)
+	if (!lst)
 		return ;
 	while (*lst)
 	{
 		temp = *lst;
-		(del)((*lst)->content);
+		free((*lst)->content);
 		*lst = ((*lst)->next);
 		free(temp);
 	}
-}
-
-void	*ft_calloc(size_t count, size_t n)
-{
-	size_t			i;
-	unsigned char	*tab;
-
-	i = 0;
-	if (n != 0 && count > UINT_MAX / n)
-		return (NULL);
-	tab = (unsigned char *)malloc(count * n);
-	if (tab != NULL)
-	{
-		while (i < count * n)
-			tab[i++] = 0;
-		return (tab);
-	}
-	return (NULL);
 }
 
 void	ft_bzero(void *s, size_t n)
@@ -109,16 +90,4 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 		i++;
 	}
 	return (tempdest);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	if (!s)
-		return (0);
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
 }
