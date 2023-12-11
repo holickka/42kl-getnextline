@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-/* usecase example of 'create read write open close' */
+/* usecase example of 'create read write open close', gnl with multiple fds */
 
 int	main()
 {
