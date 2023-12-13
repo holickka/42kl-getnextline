@@ -6,7 +6,7 @@
 /*   By: hsim <hsim@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 17:24:53 by hsim              #+#    #+#             */
-/*   Updated: 2023/12/11 20:06:23 by hsim             ###   ########.fr       */
+/*   Updated: 2023/12/13 21:12:06 by hsim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,13 @@
 static char	*ft_chrdup(char c)
 {
 	char	*dest;
-	int		i;
 
-	i = 0;
 	if (!c)
 		return (NULL);
-	dest = (char *)malloc(2 * sizeof(char));
+	dest = (char *)malloc(1 * sizeof(char));
 	if (!dest)
 		return (NULL);
-	dest[i++] = c;
-	dest[i] = '\0';
+	dest[0] = c;
 	return (dest);
 }
 
@@ -96,19 +93,19 @@ static void	loadleftover(char *buffer, char **leftover)
 	*leftover = NULL;
 }
 
-/* FOPEN_MAX is from stdio.h, max num of files allowed open */
-
 char	*get_next_line(int fd)
 {
-	static char	*leftover[FOPEN_MAX];
-	char		buffer[BUFFER_SIZE + 1];
+	static char	*leftover[OPEN_MAX];
+	char		*buffer;
 	char		*result;
 	t_list		*tab;
 
 	tab = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd > FOPEN_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &buffer, 0) < 0)
 		return (NULL);
-	ft_bzero(buffer, BUFFER_SIZE + 1);
+	buffer = (char *)malloc(BUFFER_SIZE + 1 * sizeof(char));
+	if (!ft_bzero(buffer, BUFFER_SIZE + 1))
+		return (NULL);
 	if (leftover[fd])
 		loadleftover(buffer, &leftover[fd]);
 	if (!leftover[fd] && scanbuffer(buffer, &tab, &leftover[fd]))
@@ -121,5 +118,6 @@ char	*get_next_line(int fd)
 	}
 	result = ft_combinestring(tab);
 	ft_lstclear(&tab);
+	free(buffer);
 	return (result);
 }

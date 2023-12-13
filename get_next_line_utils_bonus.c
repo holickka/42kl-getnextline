@@ -6,12 +6,11 @@
 /*   By: hsim <hsim@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 19:52:56 by hsim              #+#    #+#             */
-/*   Updated: 2023/12/13 16:17:53 by hsim             ###   ########.fr       */
+/*   Updated: 2023/12/13 21:16:37 by hsim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-#define UINT_MAX 4294967295
 
 void	ft_lstadd_back(t_list **lst, t_list *new)
 {
@@ -60,15 +59,18 @@ void	ft_lstclear(t_list **lst)
 	}
 }
 
-void	ft_bzero(void *s, size_t n)
+int	ft_bzero(void *s, size_t n)
 {
 	size_t			i;
 	unsigned char	*temp;
 
+	if (!s)
+		return (0);
 	temp = (unsigned char *)s;
 	i = 0;
 	while (i < n)
 		temp[i++] = 0;
+	return (1);
 }
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
