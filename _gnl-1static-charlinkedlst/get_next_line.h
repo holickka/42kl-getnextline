@@ -17,22 +17,21 @@
 #  define BUFFER_SIZE 2
 # endif
 
-# include <unistd.h>
-# include <limits.h>
-# include <stdlib.h>
-# include <fcntl.h>
+# include <stdlib.h> /* for malloc(), NULL */
+# include <unistd.h> /* for close(), read() function */
 
 typedef struct s_list
 {
-	void			*content;
+	char			content;
 	struct s_list	*next;
 }					t_list;
 
 char	*get_next_line(int fd);
 void	ft_lstadd_back(t_list **lst, t_list *new);
-t_list	*ft_lstnew(void *content);
+t_list	*ft_lstnew(char content);
 void	ft_lstclear(t_list **lst);
 int		ft_bzero(void *s, size_t n);
-void	*ft_memcpy(void *dest, const void *src, size_t n);
+size_t	ft_strlen(const char *s);
+void	*ft_memcpy(void *dest, const void *src, char chr, size_t n);
 
 #endif

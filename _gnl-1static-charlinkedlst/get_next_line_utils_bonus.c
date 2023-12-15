@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hsim <hsim@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 19:52:56 by hsim              #+#    #+#             */
-/*   Updated: 2023/12/13 21:26:10 by hsim             ###   ########.fr       */
+/*   Updated: 2023/12/13 21:40:10 by hsim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	}
 }
 
-t_list	*ft_lstnew(void *content)
+t_list	*ft_lstnew(char content)
 {
 	t_list	*newlist;
 
@@ -53,7 +53,6 @@ void	ft_lstclear(t_list **lst)
 	while (*lst)
 	{
 		temp = *lst;
-		free((*lst)->content);
 		*lst = ((*lst)->next);
 		free(temp);
 	}
@@ -73,7 +72,7 @@ int	ft_bzero(void *s, size_t n)
 	return (1);
 }
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
+void	*ft_memcpy(void *dest, const void *src, char chr, size_t n)
 {
 	unsigned long	i;
 	unsigned char	*tempdest;
@@ -81,14 +80,18 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 
 	tempdest = (unsigned char *)dest;
 	tempsrc = (unsigned char *)src;
+
 	i = 0;
 	if (n == 0)
 		return (tempdest);
-	if (!dest && !src)
+	if (!dest && !src && !chr)
 		return (NULL);
 	while (i < n)
 	{
-		tempdest[i] = tempsrc[i];
+		if (src && !chr)
+			tempdest[i] = tempsrc[i];
+		else if (chr && !src)
+			tempdest[i] = (unsigned char)chr;
 		i++;
 	}
 	return (tempdest);

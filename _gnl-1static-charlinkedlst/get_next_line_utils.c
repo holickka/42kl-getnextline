@@ -30,7 +30,7 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	}
 }
 
-t_list	*ft_lstnew(void *content)
+t_list	*ft_lstnew(char content)
 {
 	t_list	*newlist;
 
@@ -53,7 +53,6 @@ void	ft_lstclear(t_list **lst)
 	while (*lst)
 	{
 		temp = *lst;
-		free((*lst)->content);
 		*lst = ((*lst)->next);
 		free(temp);
 	}
@@ -73,31 +72,27 @@ int	ft_bzero(void *s, size_t n)
 	return (1);
 }
 
-void	*ft_memcpy(void *dest, const void *src, const void chr, size_t n)
+void	*ft_memcpy(void *dest, const void *src, char chr, size_t n)
 {
 	unsigned long	i;
 	unsigned char	*tempdest;
 	unsigned char	*tempsrc;
-	unsigned char	tempchr;
 
 	tempdest = (unsigned char *)dest;
 	tempsrc = (unsigned char *)src;
-	tempchr = (unsigned char)chr;
 
 	i = 0;
 	if (n == 0)
 		return (tempdest);
-	if (!dest && (!src || !chr))
+	if (!dest && !src && !chr)
 		return (NULL);
 	while (i < n)
 	{
 		if (src && !chr)
-		{
 			tempdest[i] = tempsrc[i];
-			i++;
-		}
 		else if (chr && !src)
-			tempdest[i] = tempchr[i];
+			tempdest[i] = (unsigned char)chr;
+		i++;
 	}
 	return (tempdest);
 }
