@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hsim <hsim@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 17:24:53 by hsim              #+#    #+#             */
-/*   Updated: 2023/12/13 21:40:54 by hsim             ###   ########.fr       */
+/*   Updated: 2023/12/21 20:41:04 by hsim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static char	*ft_combinestring(t_list *lst)
 static int	scanbuffer(char *buffer, t_list **tab, char **leftover)
 {
 	int	i;
+	int	wordcount;
 
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
@@ -62,9 +63,10 @@ static int	scanbuffer(char *buffer, t_list **tab, char **leftover)
 		ft_lstadd_back(tab, ft_lstnew(buffer[i++]));
 		if (buffer[i])
 		{
-			*leftover = (char *)malloc((ft_strlen(&buffer[i]) + 1) * sizeof(char));
-			ft_bzero(*leftover, ft_strlen(&buffer[i]) + 1);
-			ft_memcpy(*leftover, &buffer[i], 0, ft_strlen(&buffer[i]));
+			wordcount = ft_strlen(&buffer[i]);
+			*leftover = (char *)malloc((wordcount + 1) * sizeof(char));
+			ft_bzero(*leftover, wordcount + 1);
+			ft_memcpy(*leftover, &buffer[i], 0, wordcount);
 		}
 		return (0);
 	}

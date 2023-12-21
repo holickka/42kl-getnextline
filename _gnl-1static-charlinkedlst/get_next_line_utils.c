@@ -6,7 +6,7 @@
 /*   By: hsim <hsim@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 19:52:56 by hsim              #+#    #+#             */
-/*   Updated: 2023/12/13 21:40:10 by hsim             ###   ########.fr       */
+/*   Updated: 2023/12/21 20:37:39 by hsim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ void	*ft_memcpy(void *dest, const void *src, char chr, size_t n)
 
 	tempdest = (unsigned char *)dest;
 	tempsrc = (unsigned char *)src;
-
 	i = 0;
 	if (n == 0)
 		return (tempdest);
